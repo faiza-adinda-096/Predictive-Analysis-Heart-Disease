@@ -29,24 +29,26 @@ Menjelaskan tujuan dari pernyataan masalah:
 Dataset yang digunakan dalam proyek ini adalah Heart Disease Dataset yang tersedia secara publik di Kaggle. Dataset ini dapat diakses melalui tautan berikut: https://www.kaggle.com/datasets/mexwell/heart-disease-dataset 
 
 ### Variabel-variabel pada Heart Disease Dataset adalah sebagai berikut:
-- age : usia pasien
-- sex : jenis kelamin pasien (Binary. 0 = perempuan, 1 = laki-laki)
-- chest pain type: jenis nyeri dada (0 = typical angina, 1 = atypical angina, 2 = non-anginal pain, 3 = asymptomatic)
-- resting bps: tekanan darah saat istirahat
-- cholestrol: kadar kolestrol
-- fasting blood sugar: gula darah saat puasa >120 mg/dl (Binary. 0 = tidak, 1 = iya )
-- resting ecg: hasil elctrocardiogram saat istirahat (0 = normal, 1 = kelainan gelombang, 2 = hipertrofi ventrikel kiri)
-- max heart rate : maksimum detak jantung
-- exercise angina: angina akibat olahraga (0 = tidak, 1 = iya)
-- oldpeak: tingkat ST yang diinduksi oleh olahraga dibanding istirahat
-- ST slope: kemiringan segmen ST selama latihan (0 = downsloping, 1 = flat, 2 = upsloping)
-- target: diagnosis penyakit jantung (0 = tidak memiliki penyakit jantung, 1 = memiliki penyakit jantung)
+- ```age``` : usia pasien
+- ```sex``` : jenis kelamin pasien (Binary. 0 = perempuan, 1 = laki-laki)
+- ```chest pain type```: jenis nyeri dada (0 = typical angina, 1 = atypical angina, 2 = non-anginal pain, 3 = asymptomatic)
+- ```resting bps```: tekanan darah saat istirahat
+- ```cholestrol```: kadar kolestrol
+- ```fasting blood sugar```: gula darah saat puasa >120 mg/dl (Binary. 0 = tidak, 1 = iya )
+- ```resting ecg```: hasil elctrocardiogram saat istirahat (0 = normal, 1 = kelainan gelombang, 2 = hipertrofi ventrikel kiri)
+- ```max heart rate```: maksimum detak jantung
+- ```exercise angina```: angina akibat olahraga (0 = tidak, 1 = iya)
+- ```oldpeak```: tingkat ST yang diinduksi oleh olahraga dibanding istirahat
+- ```ST slope```: kemiringan segmen ST selama latihan (0 = downsloping, 1 = flat, 2 = upsloping)
+- ```target```: diagnosis penyakit jantung (0 = tidak memiliki penyakit jantung, 1 = memiliki penyakit jantung)
 
  ### Exploratory Data Analysis
 Exploratory data analysis atau sering disingkat EDA merupakan proses investigasi awal pada data untuk menganalisis karakteristik, menemukan pola, anomali, dan memeriksa asumsi pada data. Teknik ini biasanya menggunakan bantuan statistik dan representasi grafis atau visualisasi.
 
 Berikut ini adalah EDA yang dilakukan:
-```python df.info()```
+```python
+  heart.info()
+  ```
 
 Output dari kode diatas yaitu:
 ```
@@ -69,6 +71,25 @@ Data columns (total 12 columns):
 11   target                 1190 non-null   int64  
 dtypes: float64(1), int64(11)
 memory usage: 111.7 KB
+```
+Dapat dilihat dari output kode diatas terdapat 1190 baris data dengan 12 kolom pada dataset. Selain itu, tidak terdapat nilai null pada dataset, yang ditunjukkan oleh informasi ```non-null``` pada setiap kolom.
+
+Selanjutnya dengan kode dibawah ini, kita akan melihat statistik deskriptif dataset
+```python
+  heart.describe()
+  ```
+Output kode diatas yaitu:
+```
+|       | age   | sex   | chest pain type | resting bp s | cholesterol | fasting blood sugar | resting ecg | max heart rate | exercise angina | oldpeak | ST slope | target |
+|-------|-------|-------|------------------|---------------|-------------|----------------------|--------------|----------------|------------------|---------|----------|--------|
+| count | 1190  | 1190  | 1190             | 1190          | 1190        | 1190                 | 1190         | 1190           | 1190             | 1190    | 1190     | 1190   |
+| mean  | 53.72 | 0.76  | 3.23             | 132.15        | 210.36      | 0.21                 | 0.70         | 139.73         | 0.39             | 0.92    | 1.62     | 0.53   |
+| std   | 9.36  | 0.42  | 0.94             | 18.37         | 101.42      | 0.41                 | 0.87         | 25.52          | 0.49             | 1.09    | 0.61     | 0.50   |
+| min   | 28    | 0     | 1                | 0             | 0           | 0                    | 0            | 60             | 0                | -2.6    | 0        | 0      |
+| 25%   | 47    | 1     | 3                | 120           | 188         | 0                    | 0            | 121            | 0                | 0       | 1        | 0      |
+| 50%   | 54    | 1     | 4                | 130           | 229         | 0                    | 0            | 140.5          | 0                | 0.6     | 2        | 1      |
+| 75%   | 60    | 1     | 4                | 140           | 269.75      | 0                    | 2            | 160            | 1                | 1.6     | 2        | 1      |
+| max   | 77    | 1     | 4                | 200           | 603         | 1                    | 2            | 202            | 1                | 6.2     | 3        | 1      |
 ```
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
