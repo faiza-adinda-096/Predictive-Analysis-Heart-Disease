@@ -2,31 +2,27 @@
 
 ## Domain Proyek
 
-Penyakit jantung merupakan salah satu penyebab kematian tertinggi secara global. Masalah pada jantung dapat diklasifikasikan menjadi dua jenis utama, yaitu penyakit jantung dan serangan jantung. Menurut WHO, pada tahun 2019 terdapat 17.9 juta orang meninggal akibat penyakit jantung, mencakup 32% dari seluruh kematian global. Dari jumlah angka kematian tersebut, 85% disebabkan oleh serangan jantung dan stroke.
+Penyakit jantung merupakan salah satu penyebab kematian tertinggi secara global. Masalah pada jantung dapat diklasifikasikan menjadi dua jenis utama, yaitu penyakit jantung dan serangan jantung. Menurut WHO, pada tahun 2019 terdapat 17.9 juta orang meninggal akibat penyakit jantung, mencakup 32% dari seluruh kematian global. Dari jumlah angka kematian tersebut, 85% disebabkan oleh serangan jantung dan stroke [1].
 
-Di era perkembangan teknologi yang sangat pesat saat ini, teknologi dapat membantu kita untuk mencegah terkena penyakit jantung serta mengurangi angka kematian akibat penyakit jantung. Dengan menggunakan Machine Learning kita dapat memproses analisa data medis dengan menggunakan berbagai metode yang tersedia untuk menemukan pola atau informasi yang penting. Dengan memanfaatkan data klinis pasien seperti tekanan darah, kadar kolesterol, usia, jenis kelamin, dan gaya hidup, kita dapat membangun model prediktif yang membantu tenaga medis dalam mengidentifikasi individu dengan risiko tinggi.
+Di era perkembangan teknologi yang sangat pesat saat ini, teknologi dapat membantu kita untuk mencegah terkena penyakit jantung serta mengurangi angka kematian akibat penyakit jantung. Dengan menggunakan Machine Learning kita dapat memproses analisa data medis dengan menggunakan berbagai metode yang tersedia untuk menemukan pola atau informasi yang penting [2]. Dengan memanfaatkan data klinis pasien seperti tekanan darah, kadar kolesterol, usia, jenis kelamin, dan gaya hidup, kita dapat membangun model prediktif yang membantu tenaga medis dalam mengidentifikasi individu dengan risiko tinggi.
 
 ## Business Understanding
-
-Pada bagian ini, kamu perlu menjelaskan proses klarifikasi masalah.
-
-Bagian laporan ini mencakup:
 
 ### Problem Statements
 
 - Bagaimana memanfaatkan data klinis pasien untuk mengidentifikasi kemungkinan seseorang menderita penyakit jantung?
 - Algoritma machine learning mana yang paling efektif untuk memprediksi risiko penyakit jantung berdasarkan dataset yang tersedia?
-- Bagaimana meningkatkan performa model prediksi agar lebih akurat dan dapat diandalkan dalam pengambilan keputusan medis?
+- Bagaimana mengevaluasi performa model prediksi agar hasilnya akurat dan dapat diandalkan untuk mendukung pengambilan keputusan medis?
 
 ### Goals
 
 Menjelaskan tujuan dari pernyataan masalah:
 - Menggunakan fitur-fitur seperti usia, tekanan darah, kadar kolesterol, dll, untuk membangun model prediktif yang dapat mengklasifikasikan pasien berisiko tinggi
 - Menerapkan dan membandingkan beberapa algoritma klasifikasi seperti Logistic Regression, Random Forest, dan Support Vector Machine untuk memilih model dengan performa terbaik.
-- Melakukan evaluasi dan tuning hyperparameter untuk meningkatkan akurasi model dan menurunkan kesalahan prediksi.
+- Melakukan evaluasi terhadap masing-masing model menggunakan metrik akurasi, precision, recall, dan F1 score untuk menilai efektivitas model dalam mendeteksi risiko penyakit jantung.
 
 ## Data Understanding
-Dataset yang digunakan dalam proyek ini adalah Heart Disease Dataset yang tersedia secara publik di Kaggle. Dataset ini dapat diakses melalui tautan berikut: https://www.kaggle.com/datasets/mexwell/heart-disease-dataset 
+Dataset yang digunakan dalam proyek ini adalah _Heart Disease Dataset_ yang tersedia secara publik di Kaggle. Dataset ini dapat diakses melalui tautan berikut: [Heart-Disease-Dataset](https://www.kaggle.com/datasets/mexwell/heart-disease-dataset)
 
 ### Variabel-variabel pada Heart Disease Dataset adalah sebagai berikut:
 - ```age``` : usia pasien
@@ -102,7 +98,7 @@ np.int64(272)
 Terlihat dari output diatas bahwa terdapat 272 nilai duplikat pada dataset. Saya akan menanganinya pada tahap **Data Preparation**
 
 Selanjutnya, kita akan cek apakah ada outlier dengan kode dibawah ini
-```
+``` phyton
 # Memilih fitur-fitur numerik yang rawan outlier
 features_to_check = ['resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
 
@@ -203,7 +199,7 @@ Pada tahap ini, saya membangun 3 model machine learning yaitu:
 ### 1. Logistic Regression
 Logistic Regression digunakan sebagai baseline model untuk klasifikasi biner karena kesederhanaannya dan interpretabilitasnya yang tinggi. Model ini tidak memerlukan banyak tuning dan bekerja dengan baik jika hubungan antar fitur bersifat linier terhadap logit dari target.
 
-- Parameter yang digunakan: default (solver='lbfgs', max_iter=1000 jika perlu).
+- Parameter yang digunakan: default (```solver='lbfgs'```, ```max_iter=1000```).
 - Kelebihan: sederhana, cepat, dan hasilnya mudah diinterpretasikan.
 - Kekurangan: performa menurun jika data tidak linier atau banyak outlier.
 
@@ -216,13 +212,24 @@ y_pred_logreg = logreg.predict(X_test)
 ```
 
 ### 2. Random Forest
+Random Forest Classifier digunakan karena cocok untuk kasus klasifikasi seperti prediksi penyakit jantung. Model ini membangun banyak decision tree dan menggabungkan hasilnya untuk meningkatkan akurasi dan mengurangi overfitting.
+- Parameter yang digunakan: default (```n_estimators=100```, ```random_state=42```).
+- Kelebihan: kuat terhadap overfitting, mampu menangani fitur non-linear, dan bekerja baik tanpa perlu banyak preprocessing.
+- Kekurangan: interpretasi model lebih sulit dibanding logistic regression, dan membutuhkan lebih banyak sumber daya komputasi dibanding model yang lebih sederhana.
 
 ### 3. Support Vector Machine (SVM)
 SVM bekerja dengan memaksimalkan margin antara kelas dalam ruang fitur, cocok digunakan untuk data dengan dimensi yang tidak terlalu tinggi namun tidak linier.
 
-- Parameter yang digunakan: default (kernel='rbf').
+- Parameter yang digunakan: default (```kernel='rbf'```).
 - Kelebihan: bekerja dengan baik pada dataset kecil-menengah dan robust terhadap outlier.
 - Kekurangan: waktu pelatihan lama jika data besar; sulit diinterpretasikan.
+
+  Membangun model Logistic Regression dengan kode dibawah:
+```phyton
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+y_pred_rf = rf.predict(X_test)
+```
 
 Membangun model Logistic Regression dengan kode dibawah:
 ```phyton
@@ -238,23 +245,50 @@ y_pred_svm = svm.predict(X_test)
 - Jika menggunakan dua atau lebih algoritma pada solution statement, maka pilih model terbaik sebagai solusi. **Jelaskan mengapa memilih model tersebut sebagai model terbaik**.
 
 ## Evaluation
-Pada bagian ini anda perlu menyebutkan metrik evaluasi yang digunakan. Lalu anda perlu menjelaskan hasil proyek berdasarkan metrik evaluasi yang digunakan.
+Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa model klasifikasi yang telah dibangun, yaitu akurasi, precision, recall, dan F1-score. Metrik-metrik ini dipilih karena sesuai dengan permasalahan klasifikasi yang sedang diselesaikan.
 
-Sebagai contoh, Anda memiih kasus klasifikasi dan menggunakan metrik **akurasi, precision, recall, dan F1 score**. Jelaskan mengenai beberapa hal berikut:
-- Penjelasan mengenai metrik yang digunakan
-- Menjelaskan hasil proyek berdasarkan metrik evaluasi
+- Akurasi untuk mengukur proporsi prediksi yang benar terhadap seluruh data.
+Formula:
+![image](https://github.com/user-attachments/assets/dc5f13d2-8f08-4671-8ba9-4e6e2b30aa69)
 
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
+- Precision mengukur seberapa tepat model dalam memprediksi kelas positif (berapa banyak dari prediksi positif yang benar).
+Formula:
+![image](https://github.com/user-attachments/assets/d16e2027-7722-4b4c-9d30-a9cbff2de6f6)
+
+- Recall mengukur seberapa baik model dalam menemukan semua kasus positif yang sebenarnya.
+Formula:
+![image](https://github.com/user-attachments/assets/80cc663d-b807-4cb7-a3d2-4271d854d8f8)
+
+- F1 Score merupakan gabungan antara precision dan recall. Metrik ini berguna saat dibutuhkan keseimbangan antara keduanya.
+Formula:
+![image](https://github.com/user-attachments/assets/007c3a65-1de9-4fd8-a672-35c3c90ae4ca)
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
 
-**---Ini adalah bagian akhir laporan---**
+## Hasil Evaluasi Model
+Tiga model yang diuji adalah Logistic Regression, Support Vector Machine (SVM), dan Random Forest Classifier. Berikut hasil evaluasi berdasarkan metrik:
+```
+Logistic Regression:
+Accuracy: 0.85
+Precision: 0.86
+Recall: 0.85
+F1 Score: 0.86
 
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+SVM:
+Accuracy: 0.71
+Precision: 0.78
+Recall: 0.62
+F1 Score: 0.69
+
+Random Forest:
+Accuracy: 0.89
+Precision: 0.89
+Recall: 0.91
+F1 Score: 0.9
+```
+Berdasarkan hasil evaluasi, model Random Forest Classifier memberikan performa terbaik di antara ketiga model yang diuji, dengan nilai **akurasi, precision, recall, dan F1-score** tertinggi. Oleh karena itu, model ini dipilih sebagai model terbaik untuk menyelesaikan permasalahan klasifikasi pada proyek ini.
 
 ## Referensi
-- [WHO] (https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds))
-- [Scholar] (https://ejournal.upnvj.ac.id/informatik/article/view/4694/1852)
+[1] World Health Organization, “Cardiovascular diseases (CVDs),” World Health Organization, Jun. 11, 2021. [Online]. Available: https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds)
+[2] F. M. Adibah, S. Afifah, and R. Rachmawati, “Penerapan Algoritma Klasifikasi Untuk Prediksi Penyakit Jantung Menggunakan Metode K-NN,” Jurnal Informatika, vol. 12, no. 1, pp. 52–58, Mar. 2021. [Online]. Available: https://ejournal.upnvj.ac.id/informatik/article/view/4694/1852
