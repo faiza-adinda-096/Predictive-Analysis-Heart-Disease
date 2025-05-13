@@ -1,4 +1,4 @@
-# Laporan Proyek Machine Learning - Faiza Adinda Fakhira Batubara
+![image](https://github.com/user-attachments/assets/cd419317-7c10-47ac-892a-d6125c2536d0)# Laporan Proyek Machine Learning - Faiza Adinda Fakhira Batubara
 
 ## Domain Proyek
 
@@ -91,6 +91,32 @@ Output kode diatas yaitu:
 | 75%   | 60    | 1     | 4                | 140           | 269.75      | 0                    | 2            | 160            | 1                | 1.6     | 2        | 1      |
 | max   | 77    | 1     | 4                | 200           | 603         | 1                    | 2            | 202            | 1                | 6.2     | 3        | 1      |
 ```
+Lalu, dengan kode dibawah ini, kita akan melihat apakah ada nilai duplikat
+```python
+  heart.duplicated().sum()
+  ```
+Output:
+```
+np.int64(272)
+```
+Terlihat dari output diatas bahwa terdapat 272 nilai duplikat pada dataset. Saya akan menanganinya pada tahap **Data Preparation**
+
+Selanjutnya, kita akan cek apakah ada outlier dengan kode dibawah ini
+```
+features_to_check = ['resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
+
+plt.figure(figsize=(15, 10))
+
+for i, feature in enumerate(features_to_check, 1):
+    plt.subplot(2, 3, i)
+    sns.boxplot(data=heart, y=feature, color='skyblue')
+    plt.title(f'Boxplot of {feature}')
+    plt.tight_layout()
+
+plt.show()
+```
+Output:
+
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
