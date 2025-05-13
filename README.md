@@ -114,20 +114,24 @@ plt.show()
 ```
 Output:
 ![image](https://github.com/user-attachments/assets/cd419317-7c10-47ac-892a-d6125c2536d0)
-Terlihat bahwa pada keempat fitur tersebut terdeteksi ada outlier
 
-Selanjutnya, saya akan melakukan **Visualisasi Data**
+Terlihat bahwa pada keempat fitur tersebut terdeteksi ada outlier. Outlier akan ditangani pada tahap **Data Preparation**
+
+### Visualisasi Data
 - _Univariate Analysis_
+
   ![image](https://github.com/user-attachments/assets/bcca5737-cdb0-495a-8df4-cc620c0438bb)
 Histogram di atas menunjukkan distribusi masing-masing fitur dalam dataset. Sebagian besar fitur memiliki distribusi normal atau mendekati normal, seperti ```age```, ```resting bp s```, dan ```max heart rate```. Namun,  beberapa fitur seperti ```cholesterol``` dan ```oldpeak``` memiliki outlier dan distribusi yang skewed (tidak simetris). Distribusi ini memberikan gambaran awal mengenai pola data dan potensi perlunya penanganan seperti normalisasi atau transformasi.
 
 - _Multivariate Analysis_
   
   **Scatterplot**
+  
   ![image](https://github.com/user-attachments/assets/ad493e17-59bb-45f2-8a3e-fc977bdb3a97)
 Visualisasi pertama menggunakan scatterplot matrix (pairplot) bertujuan untuk melihat hubungan antar seluruh kombinasi fitur numerik secara pairwise. Pada visualisasi ini, setiap kombinasi dua fitur ditampilkan dalam bentuk scatter plot, sementara diagonalnya menunjukkan distribusi masing-masing fitur melalui histogram. Dari scatterplot matrix tersebut, tampak bahwa beberapa fitur seperti chest pain type, max heart rate, oldpeak, dan ST slope menunjukkan pola sebaran yang cukup berbeda antar nilai target (pasien dengan atau tanpa penyakit jantung), sehingga berpotensi menjadi prediktor penting dalam pemodelan.
 
  **Heatmap Correlation**
+ 
  ![image](https://github.com/user-attachments/assets/ed4c66c7-2187-432c-a4ef-2bf4e521a4e0)
 Visualisasi kedua berupa heatmap korelasi memperlihatkan hubungan korelasi linear antar fitur numerik menggunakan koefisien Pearson. Hasil heatmap menunjukkan bahwa fitur yang paling berkorelasi dengan variabel target (penyakit jantung) adalah chest pain type (0.46), ST slope (0.51), exercise angina (-0.48), max heart rate (-0.41), dan oldpeak (-0.40). Korelasi positif menunjukkan bahwa semakin tinggi nilai fitur, semakin besar kemungkinan menderita penyakit jantung, dan sebaliknya untuk korelasi negatif. Di sisi lain, beberapa fitur seperti cholesterol, resting blood pressure, dan fasting blood sugar memiliki korelasi rendah terhadap target, yang mengindikasikan kontribusinya dalam prediksi kemungkinan tidak terlalu signifikan.
 
@@ -245,23 +249,39 @@ y_pred_svm = svm.predict(X_test)
 - Jika menggunakan dua atau lebih algoritma pada solution statement, maka pilih model terbaik sebagai solusi. **Jelaskan mengapa memilih model tersebut sebagai model terbaik**.
 
 ## Evaluation
-Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa model klasifikasi yang telah dibangun, yaitu akurasi, precision, recall, dan F1-score. Metrik-metrik ini dipilih karena sesuai dengan permasalahan klasifikasi yang sedang diselesaikan.
+Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa model klasifikasi yang telah dibangun, yaitu **akurasi, precision, recall, dan F1-score**. Metrik-metrik ini dipilih karena sesuai dengan permasalahan klasifikasi yang sedang diselesaikan.
 
 - Akurasi untuk mengukur proporsi prediksi yang benar terhadap seluruh data.
+
 Formula:
-![image](https://github.com/user-attachments/assets/dc5f13d2-8f08-4671-8ba9-4e6e2b30aa69)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dc5f13d2-8f08-4671-8ba9-4e6e2b30aa69" alt="Formula Akurasi" width="400">
+</p>
 
 - Precision mengukur seberapa tepat model dalam memprediksi kelas positif (berapa banyak dari prediksi positif yang benar).
+
 Formula:
-![image](https://github.com/user-attachments/assets/d16e2027-7722-4b4c-9d30-a9cbff2de6f6)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d16e2027-7722-4b4c-9d30-a9cbff2de6f6" alt="Formula Precision" width="400">
+</p>
 
 - Recall mengukur seberapa baik model dalam menemukan semua kasus positif yang sebenarnya.
+
 Formula:
-![image](https://github.com/user-attachments/assets/80cc663d-b807-4cb7-a3d2-4271d854d8f8)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/80cc663d-b807-4cb7-a3d2-4271d854d8f8" alt="Formula Recall" width="400">
+</p>
 
 - F1 Score merupakan gabungan antara precision dan recall. Metrik ini berguna saat dibutuhkan keseimbangan antara keduanya.
+
 Formula:
-![image](https://github.com/user-attachments/assets/007c3a65-1de9-4fd8-a672-35c3c90ae4ca)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/007c3a65-1de9-4fd8-a672-35c3c90ae4ca" alt="Formula F1 Score" width="400">
+</p>
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
@@ -287,7 +307,7 @@ Precision: 0.89
 Recall: 0.91
 F1 Score: 0.9
 ```
-Berdasarkan hasil evaluasi, model Random Forest Classifier memberikan performa terbaik di antara ketiga model yang diuji, dengan nilai **akurasi, precision, recall, dan F1-score** tertinggi. Oleh karena itu, model ini dipilih sebagai model terbaik untuk menyelesaikan permasalahan klasifikasi pada proyek ini.
+Berdasarkan hasil evaluasi, model **Random Forest Classifier** memberikan performa terbaik di antara ketiga model yang diuji, dengan nilai akurasi, precision, recall, dan F1-score tertinggi. Oleh karena itu, model ini dipilih sebagai model terbaik untuk menyelesaikan permasalahan klasifikasi pada proyek ini.
 
 ## Referensi
 [1] World Health Organization, “Cardiovascular diseases (CVDs),” World Health Organization, Jun. 11, 2021. [Online]. Available: https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds)
