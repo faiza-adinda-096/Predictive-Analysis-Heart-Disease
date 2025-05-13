@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/cd419317-7c10-47ac-892a-d6125c2536d0)# Laporan Proyek Machine Learning - Faiza Adinda Fakhira Batubara
+# Laporan Proyek Machine Learning - Faiza Adinda Fakhira Batubara
 
 ## Domain Proyek
 
@@ -22,7 +22,7 @@ Bagian laporan ini mencakup:
 
 Menjelaskan tujuan dari pernyataan masalah:
 - Menggunakan fitur-fitur seperti usia, tekanan darah, kadar kolesterol, dll, untuk membangun model prediktif yang dapat mengklasifikasikan pasien berisiko tinggi
-- Menerapkan dan membandingkan beberapa algoritma klasifikasi seperti Logistic Regression, Random Forest, dan Support Vector Machine (SVM) untuk memilih model dengan performa terbaik.
+- Menerapkan dan membandingkan beberapa algoritma klasifikasi seperti Logistic Regression, Random Forest, dan Support Vector Machine untuk memilih model dengan performa terbaik.
 - Melakukan evaluasi dan tuning hyperparameter untuk meningkatkan akurasi model dan menurunkan kesalahan prediksi.
 
 ## Data Understanding
@@ -103,6 +103,7 @@ Terlihat dari output diatas bahwa terdapat 272 nilai duplikat pada dataset. Saya
 
 Selanjutnya, kita akan cek apakah ada outlier dengan kode dibawah ini
 ```
+# Memilih fitur-fitur numerik yang rawan outlier
 features_to_check = ['resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
 
 plt.figure(figsize=(15, 10))
@@ -116,21 +117,121 @@ for i, feature in enumerate(features_to_check, 1):
 plt.show()
 ```
 Output:
+![image](https://github.com/user-attachments/assets/cd419317-7c10-47ac-892a-d6125c2536d0)
+Terlihat bahwa pada keempat fitur tersebut terdeteksi ada outlier
 
+Selanjutnya, saya akan melakukan **Visualisasi Data**
+- _Univariate Analysis_
+  ![image](https://github.com/user-attachments/assets/bcca5737-cdb0-495a-8df4-cc620c0438bb)
+Histogram di atas menunjukkan distribusi masing-masing fitur dalam dataset. Sebagian besar fitur memiliki distribusi normal atau mendekati normal, seperti ```age```, ```resting bp s```, dan ```max heart rate```. Namun,  beberapa fitur seperti ```cholesterol``` dan ```oldpeak``` memiliki outlier dan distribusi yang skewed (tidak simetris). Distribusi ini memberikan gambaran awal mengenai pola data dan potensi perlunya penanganan seperti normalisasi atau transformasi.
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
+- _Multivariate Analysis_
+  
+  **Scatterplot**
+  ![image](https://github.com/user-attachments/assets/ad493e17-59bb-45f2-8a3e-fc977bdb3a97)
+Visualisasi pertama menggunakan scatterplot matrix (pairplot) bertujuan untuk melihat hubungan antar seluruh kombinasi fitur numerik secara pairwise. Pada visualisasi ini, setiap kombinasi dua fitur ditampilkan dalam bentuk scatter plot, sementara diagonalnya menunjukkan distribusi masing-masing fitur melalui histogram. Dari scatterplot matrix tersebut, tampak bahwa beberapa fitur seperti chest pain type, max heart rate, oldpeak, dan ST slope menunjukkan pola sebaran yang cukup berbeda antar nilai target (pasien dengan atau tanpa penyakit jantung), sehingga berpotensi menjadi prediktor penting dalam pemodelan.
+
+ **Heatmap Correlation**
+ ![image](https://github.com/user-attachments/assets/ed4c66c7-2187-432c-a4ef-2bf4e521a4e0)
+Visualisasi kedua berupa heatmap korelasi memperlihatkan hubungan korelasi linear antar fitur numerik menggunakan koefisien Pearson. Hasil heatmap menunjukkan bahwa fitur yang paling berkorelasi dengan variabel target (penyakit jantung) adalah chest pain type (0.46), ST slope (0.51), exercise angina (-0.48), max heart rate (-0.41), dan oldpeak (-0.40). Korelasi positif menunjukkan bahwa semakin tinggi nilai fitur, semakin besar kemungkinan menderita penyakit jantung, dan sebaliknya untuk korelasi negatif. Di sisi lain, beberapa fitur seperti cholesterol, resting blood pressure, dan fasting blood sugar memiliki korelasi rendah terhadap target, yang mengindikasikan kontribusinya dalam prediksi kemungkinan tidak terlalu signifikan.
 
 ## Data Preparation
-Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
+- **Cleaning data**
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
+  Pada tahap ini saya melalukan cleaning data, yaitu menghapus data duplikat dan menghapus outlier. Melakukan cleaning data sangat penting karena dapat meningkatkan kualitas dan keakuratan data.
+ 
+Kode dibawah ini melakukan penghapusan nilai duplikat dan cek kembali apakah ada masih ada nilai duplikat
+```python
+  heart = heart.drop_duplicates()
+  heart.duplicated().sum()
+  ```
+Output:
+```python
+ np.int64(0)
+  ```
+Dapat dilihat dari output diatas bahwa dataset sudah bersih dari nilai duplikat. Selanjutnya saya akan menangani kolom-kolom yang terdapat outlier (```resting bp s```, ```cholesterol```, ```max heart rate```, ```oldpeak```) dengan kode dibawah
+```python
+  # Menangani Outlier
+def remove_outliers_iqr(df, columns):
+    for col in columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        df = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
+    return df
+
+# Kolom yang ingin dibersihkan dari outlier
+outlier_cols = ['resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
+heart = remove_outliers_iqr(heart, outlier_cols)
+  ```
+- **Split Dataset**
+
+  Tahapan split dataset diperlukan untuk memisahkan data menjadi data latih (training) dan data uji (testing), agar model dapat dilatih pada satu bagian data dan dievaluasi pada bagian data yang tidak pernah dilihat sebelumnya. Dengan memisahkan dataset, kita dapat memastikan bahwa evaluasi model lebih objektif dan mencerminkan performa di dunia nyata.
+  
+  Melakukan split dataset dan cek jumlah data sampel dengan kode dibawah ini:
+  ```python
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+  print(f'Total # of sample in whole dataset: {len(X)}')
+  print(f'Total # of sample in train dataset: {len(X_train)}')
+  print(f'Total # of sample in test dataset: {len(X_test)}')
+  ```
+  Output:
+  ```
+  Total # of sample in whole dataset: 701
+  Total # of sample in train dataset: 560
+  Total # of sample in test dataset: 141
+  ```
+  Dapat dilihat pada output diatas, bahwa split dataset telah berhasil dan telah membagi data menjadi data train dan data test, dengan jumlah sampel **560 pada data train** dan **141 pada data test**.
+  
+- **Standarisasi**
+
+  Standarisasi dilakukan untuk memastikan seluruh fitur numerik berada dalam skala yang sama, yaitu dengan rata-rata 0 dan standar deviasi 1. Hal ini penting agar algoritma machine learning yang sensitif terhadap skala fitur, seperti Support Vector Machine (SVM) dan Logistic Regression, dapat bekerja secara optimal.
+
+  Melakukan standarisasi dengan kode dibawah:
+  ```python
+  scaler = StandardScaler()
+  X_train_scaled = scaler.fit_transform(X_train) 
+  X_test_scaled = scaler.transform(X_test) 
+  ```
 
 ## Modeling
-Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
+Pada tahap ini, saya membangun 3 model machine learning yaitu:
 
+### 1. Logistic Regression
+Logistic Regression digunakan sebagai baseline model untuk klasifikasi biner karena kesederhanaannya dan interpretabilitasnya yang tinggi. Model ini tidak memerlukan banyak tuning dan bekerja dengan baik jika hubungan antar fitur bersifat linier terhadap logit dari target.
+
+- Parameter yang digunakan: default (solver='lbfgs', max_iter=1000 jika perlu).
+- Kelebihan: sederhana, cepat, dan hasilnya mudah diinterpretasikan.
+- Kekurangan: performa menurun jika data tidak linier atau banyak outlier.
+
+Membangun model Logistic Regression dengan kode dibawah:
+```phyton
+# Membangun Model Logistic Regression
+logreg = LogisticRegression(max_iter=1000)
+logreg.fit(X_train, y_train)
+y_pred_logreg = logreg.predict(X_test)
+```
+
+### 2. Random Forest
+
+### 3. Support Vector Machine (SVM)
+SVM bekerja dengan memaksimalkan margin antara kelas dalam ruang fitur, cocok digunakan untuk data dengan dimensi yang tidak terlalu tinggi namun tidak linier.
+
+- Parameter yang digunakan: default (kernel='rbf').
+- Kelebihan: bekerja dengan baik pada dataset kecil-menengah dan robust terhadap outlier.
+- Kekurangan: waktu pelatihan lama jika data besar; sulit diinterpretasikan.
+
+Membangun model Logistic Regression dengan kode dibawah:
+```phyton
+svm = SVC()
+svm.fit(X_train, y_train)
+
+y_pred_svm = svm.predict(X_test)
+```
+  
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan kelebihan dan kekurangan dari setiap algoritma yang digunakan.
 - Jika menggunakan satu algoritma pada solution statement, lakukan proses improvement terhadap model dengan hyperparameter tuning. **Jelaskan proses improvement yang dilakukan**.
@@ -155,3 +256,5 @@ _Catatan:_
 - Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
 
 ## Referensi
+- [WHO] (https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds))
+- [Scholar] (https://ejournal.upnvj.ac.id/informatik/article/view/4694/1852)
