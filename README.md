@@ -75,8 +75,8 @@ Selanjutnya dengan kode dibawah ini, kita akan melihat statistik deskriptif data
   heart.describe()
   ```
 Output kode diatas yaitu:
-```
-|       | age   | sex   | chest pain type | resting bp s | cholesterol | fasting blood sugar | resting ecg | max heart rate | exercise angina | oldpeak | ST slope | target |
+
+|       | age   | sex   | chest pain type  | resting bp s  | cholesterol | fasting blood sugar  | resting ecg  | max heart rate | exercise angina  | oldpeak | ST slope | target |
 |-------|-------|-------|------------------|---------------|-------------|----------------------|--------------|----------------|------------------|---------|----------|--------|
 | count | 1190  | 1190  | 1190             | 1190          | 1190        | 1190                 | 1190         | 1190           | 1190             | 1190    | 1190     | 1190   |
 | mean  | 53.72 | 0.76  | 3.23             | 132.15        | 210.36      | 0.21                 | 0.70         | 139.73         | 0.39             | 0.92    | 1.62     | 0.53   |
@@ -86,7 +86,7 @@ Output kode diatas yaitu:
 | 50%   | 54    | 1     | 4                | 130           | 229         | 0                    | 0            | 140.5          | 0                | 0.6     | 2        | 1      |
 | 75%   | 60    | 1     | 4                | 140           | 269.75      | 0                    | 2            | 160            | 1                | 1.6     | 2        | 1      |
 | max   | 77    | 1     | 4                | 200           | 603         | 1                    | 2            | 202            | 1                | 6.2     | 3        | 1      |
-```
+
 Lalu, dengan kode dibawah ini, kita akan melihat apakah ada nilai duplikat
 ```python
   heart.duplicated().sum()
@@ -98,7 +98,7 @@ np.int64(272)
 Terlihat dari output diatas bahwa terdapat 272 nilai duplikat pada dataset. Saya akan menanganinya pada tahap **Data Preparation**
 
 Selanjutnya, kita akan cek apakah ada outlier dengan kode dibawah ini
-``` phyton
+```python
 # Memilih fitur-fitur numerik yang rawan outlier
 features_to_check = ['resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
 
@@ -170,8 +170,12 @@ heart = remove_outliers_iqr(heart, outlier_cols)
 
   Tahapan split dataset diperlukan untuk memisahkan data menjadi data latih (training) dan data uji (testing), agar model dapat dilatih pada satu bagian data dan dievaluasi pada bagian data yang tidak pernah dilihat sebelumnya. Dengan memisahkan dataset, kita dapat memastikan bahwa evaluasi model lebih objektif dan mencerminkan performa di dunia nyata.
   
-  Melakukan split dataset dan cek jumlah data sampel dengan kode dibawah ini:
+  Pada tahap ini, dataset dibagi menjadi dua bagian, yaitu data pelatihan (training set) dan data pengujian (test set). Sebelum dilakukan pembagian, fitur prediktor ```(X)``` dipisahkan dari variabel target ```(y)``` dengan cara menghapus kolom target dari dataset asli. Selanjutnya, pembagian dilakukan menggunakan fungsi ```train_test_split``` dari _library scikit-learn_ dengan rasio 80% data untuk pelatihan dan 20% untuk pengujian. Parameter ```random_state=42``` digunakan agar hasil pembagian tetap konsisten saat kode dijalankan ulang. Setelah itu, dilakukan pencetakan jumlah sampel pada masing-masing subset untuk memastikan bahwa pembagian data telah berhasil terbagi sesuai harapan. Kode dibawah ini digunakan untuk melakukan split dataset dan cek jumlah data sampel.
   ```python
+  # Split Dataset dan Cek Jumlah Sampel
+  X = heart.drop('target', axis=1)
+  y = heart['target']
+
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
   print(f'Total # of sample in whole dataset: {len(X)}')
@@ -221,6 +225,14 @@ Random Forest Classifier digunakan karena cocok untuk kasus klasifikasi seperti 
 - Kelebihan: kuat terhadap overfitting, mampu menangani fitur non-linear, dan bekerja baik tanpa perlu banyak preprocessing.
 - Kekurangan: interpretasi model lebih sulit dibanding logistic regression, dan membutuhkan lebih banyak sumber daya komputasi dibanding model yang lebih sederhana.
 
+Membangun model Random Forest dengan kode dibawah:
+```phyton
+# Membangun Model Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+y_pred_rf = rf.predict(X_test)
+```
+
 ### 3. Support Vector Machine (SVM)
 SVM bekerja dengan memaksimalkan margin antara kelas dalam ruang fitur, cocok digunakan untuk data dengan dimensi yang tidak terlalu tinggi namun tidak linier.
 
@@ -230,23 +242,12 @@ SVM bekerja dengan memaksimalkan margin antara kelas dalam ruang fitur, cocok di
 
   Membangun model Logistic Regression dengan kode dibawah:
 ```phyton
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-rf.fit(X_train, y_train)
-y_pred_rf = rf.predict(X_test)
-```
-
-Membangun model Logistic Regression dengan kode dibawah:
-```phyton
+# Membangun Model Support Vector Machine (SVM)
 svm = SVC()
 svm.fit(X_train, y_train)
 
 y_pred_svm = svm.predict(X_test)
 ```
-  
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan kelebihan dan kekurangan dari setiap algoritma yang digunakan.
-- Jika menggunakan satu algoritma pada solution statement, lakukan proses improvement terhadap model dengan hyperparameter tuning. **Jelaskan proses improvement yang dilakukan**.
-- Jika menggunakan dua atau lebih algoritma pada solution statement, maka pilih model terbaik sebagai solusi. **Jelaskan mengapa memilih model tersebut sebagai model terbaik**.
 
 ## Evaluation
 Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa model klasifikasi yang telah dibangun, yaitu **akurasi, precision, recall, dan F1-score**. Metrik-metrik ini dipilih karena sesuai dengan permasalahan klasifikasi yang sedang diselesaikan.
